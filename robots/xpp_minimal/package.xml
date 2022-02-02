@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<package format="2">
+  <name>xpp_minimal</name>
+  <version>1.0.10</version>
+  <description>
+    Minimal clone of HyQ Monoped
+  </description>
+  
+  <author>Alexander W. Winkler -> Jeonghwan Kim</author>
+  <author email="depardo@ethz.ch">Diego Pardo.</author>
+  <author email="carlos.mastalli@iit.it">Carlos Mastalli</author>
+  <author email="ioannis@robots.ox.ac.uk">Ioannis Havoutis</author>
+  <maintainer email="alexander.w.winkler@gmail.com">Alexander W. Winkler</maintainer>
+  <license>BSD</license>
+  
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>xacro</depend>
+  <depend>roscpp</depend>
+  <depend>xpp_vis</depend>
+  <depend>xpp_hyq</depend>
+</package>
