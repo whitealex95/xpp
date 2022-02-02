@@ -1,2 +1,4 @@
 <launch>
+  <!--  Launches all visualizers that use HyQ legs  --> 
+  <include file="$(find xpp_aliengo)/launch/aliengo.launch"></include>
 </launch>
