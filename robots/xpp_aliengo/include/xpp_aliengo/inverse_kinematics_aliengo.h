@@ -26,7 +26,7 @@ public:
   int GetEECount() const override { return 4; };
 
 private:
-  Vector3d base2hip_LF_ = Vector3d(0.3735, 0.207, 0.0);
+  Vector3d base2hip_LF_ = Vector3d(0.2399, 0.051, 0.0);
   AliengolegInverseKinematics leg;
 };
 

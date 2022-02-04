@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <map>
+#include <iostream>
 
 #include <xpp_states/cartesian_declarations.h>
 
@@ -9,8 +10,7 @@ namespace xpp {
 
 
 AliengolegInverseKinematics::Vector3d
-AliengolegInverseKinematics::GetJointAngles (const Vector3d& ee_pos_B,
-  KneeBend bend) const
+AliengolegInverseKinematics::GetJointAngles (const Vector3d& ee_pos_B) const
 {
   double q_HAA_bf, q_HAA_br, q_HFE_br; // rear bend of knees
   double q_HFE_bf, q_KFE_br, q_KFE_bf; // forward bend of knees
@@ -22,41 +22,41 @@ AliengolegInverseKinematics::GetJointAngles (const Vector3d& ee_pos_B,
   // and flip coordinate signs such that all computations can be done
   // for the front-left leg
   xr = ee_pos_B;
-
+  double tmp1 = pow(xr[Y], 2) + pow(xr[Z], 2);
+  double alpha1 = acos(0.083/sqrt(tmp1));
+  double alpha2 = atan2(-xr[Z], xr[Y]);
   // compute the HAA angle
-  q_HAA_bf = q_HAA_br = -atan2(xr[Y], -xr[Z]);
+  q_HAA_bf = q_HAA_br = alpha1 - alpha2;
 
   // rotate into the HFE coordinate system (rot around X)
   R <<  1.0, 0.0, 0.0, 
-        0.0, cos(q_HAA_bf), -sin(q_HAA_bf),
-        0.0, sin(q_HAA_bf), cos(q_HAA_bf);
+        0.0, cos(-q_HAA_bf), -sin(-q_HAA_bf),
+        0.0, sin(-q_HAA_bf), cos(-q_HAA_bf);
   
   xr =  (R * xr).eval();
 
-  // translate into the HFE coordinate system (along Z axis)
-  xr += hfe_to_haa_z; //distance of HFE to HAA in z direction
-
   // compute square of length from HFE to foot
-  double tmp1 = pow(xr[X], 2)+pow(xr[Z],2);
+  double tmp2 = pow(xr[X], 2)+pow(xr[Z],2);
 
   // compute temporary angles (with reachability check)
   double lu = length_thigh; // length of upper leg
   double ll = length_shank; // length of lower leg
-  double alpha = atan2(-xr[Z],xr[X]) - 0.5*M_PI; // flip and rotate to match HyQ joint definition
+  
+  double beta1 = atan2(-xr[Z],xr[X]) - 0.5*M_PI; // flip and rotate to match HyQ joint definition
 
-  double some_random_value_for_beta = (pow(lu,2)+tmp1-pow(ll,2))/(2. *sqrt(tmp1));
+  double some_random_value_for_beta = (pow(lu,2)+tmp2-pow(ll,2))/(2.*lu*sqrt(tmp2));
   if (some_random_value_for_beta > 1) {
     some_random_value_for_beta = 1;
   }
   if (some_random_value_for_beta < -1) {
     some_random_value_for_beta = -1;
   }
-  double beta = acos(some_random_value_for_beta);
+  double beta2 = acos(some_random_value_for_beta);
 
   // compute Hip FE angle
-  q_HFE_bf = q_HFE_br = alpha + beta;
+  q_HFE_bf = q_HFE_br = beta1 + beta2;
 
-  double some_random_value_for_gamma = (pow(ll,2)+pow(lu,2)-tmp1)/(2.*ll*lu);
+  double some_random_value_for_gamma = (pow(ll,2)+pow(lu,2)-tmp2)/(2.*ll*lu);
   // law of cosines give the knee angle
   if (some_random_value_for_gamma > 1) {
     some_random_value_for_gamma = 1;
@@ -69,20 +69,17 @@ AliengolegInverseKinematics::GetJointAngles (const Vector3d& ee_pos_B,
 
   q_KFE_bf = q_KFE_br = gamma - M_PI;
 
-  // forward knee bend
-  EnforceLimits(q_HAA_bf, HAA);
-  EnforceLimits(q_HFE_bf, HFE);
-  EnforceLimits(q_KFE_bf, KFE);
+  // // forward knee bend
+  // EnforceLimits(q_HAA_bf, HAA);
+  // EnforceLimits(q_HFE_bf, HFE);
+  // EnforceLimits(q_KFE_bf, KFE);
 
-  // backward knee bend
-  EnforceLimits(q_HAA_br, HAA);
-  EnforceLimits(q_HFE_br, HFE);
-  EnforceLimits(q_KFE_br, KFE);
+  // // backward knee bend
+  // EnforceLimits(q_HAA_br, HAA);
+  // EnforceLimits(q_HFE_br, HFE);
+  // EnforceLimits(q_KFE_br, KFE);
 
-  if (bend==Forward)
-    return Vector3d(q_HAA_bf, q_HFE_bf, q_KFE_bf);
-  else // backward
-    return Vector3d(q_HAA_br, -q_HFE_br, -q_KFE_br);
+  return Vector3d(q_HAA_bf, q_HFE_bf, q_KFE_bf);
 
 }
 

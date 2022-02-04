@@ -31,18 +31,18 @@ int main(int argc, char *argv[])
   int n_ee = aliengo_ik->GetEECount();
   int n_j  = AliengolegJointCount;
   std::vector<UrdfVisualizer::URDFName> joint_names(n_ee*n_j);
-  joint_names.at(n_j*LF + HAA) = "lf_haa_joint";
-  joint_names.at(n_j*LF + HFE) = "lf_hfe_joint";
-  joint_names.at(n_j*LF + KFE) = "lf_kfe_joint";
-  joint_names.at(n_j*RF + HAA) = "rf_haa_joint";
-  joint_names.at(n_j*RF + HFE) = "rf_hfe_joint";
-  joint_names.at(n_j*RF + KFE) = "rf_kfe_joint";
-  joint_names.at(n_j*LH + HAA) = "lh_haa_joint";
-  joint_names.at(n_j*LH + HFE) = "lh_hfe_joint";
-  joint_names.at(n_j*LH + KFE) = "lh_kfe_joint";
-  joint_names.at(n_j*RH + HAA) = "rh_haa_joint";
-  joint_names.at(n_j*RH + HFE) = "rh_hfe_joint";
-  joint_names.at(n_j*RH + KFE) = "rh_kfe_joint";
+  joint_names.at(n_j*LF + HAA) = "FL_hip_joint";
+  joint_names.at(n_j*LF + HFE) = "FL_thigh_joint";
+  joint_names.at(n_j*LF + KFE) = "FL_calf_joint";
+  joint_names.at(n_j*RF + HAA) = "FR_hip_joint";
+  joint_names.at(n_j*RF + HFE) = "FR_thigh_joint";
+  joint_names.at(n_j*RF + KFE) = "FR_calf_joint";
+  joint_names.at(n_j*LH + HAA) = "RL_hip_joint";
+  joint_names.at(n_j*LH + HFE) = "RL_thigh_joint";
+  joint_names.at(n_j*LH + KFE) = "RL_calf_joint";
+  joint_names.at(n_j*RH + HAA) = "RR_hip_joint";
+  joint_names.at(n_j*RH + HFE) = "RR_thigh_joint";
+  joint_names.at(n_j*RH + KFE) = "RR_calf_joint";
 
   std::string urdf = "aliengo_rviz_urdf_robot_description";
   UrdfVisualizer aliengo_desired(urdf, joint_names, "base", "world",

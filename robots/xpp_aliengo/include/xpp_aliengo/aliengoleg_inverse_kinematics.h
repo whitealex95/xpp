@@ -13,7 +13,6 @@ enum AliengoJointID {HAA=0, HFE, KFE, AliengolegJointCount};
 class AliengolegInverseKinematics {
 public:
   using Vector3d = Eigen::Vector3d;
-  enum KneeBend { Forward, Backward };
 
   /**
    * @brief Default c'tor initializing leg lengths with standard values
@@ -27,7 +26,7 @@ public:
    * @param ee_pos_H Foot position xyz expressed in the frame attached
    * at the hip-aa (H)
    */
-  Vector3d GetJointAngles(const Vector3d& ee_pos_H, KneeBend bend=Forward) const;
+  Vector3d GetJointAngles(const Vector3d& ee_pos_H) const;
 
   /**
    * @brief Restricts the joint angles to lie inside feasible range
@@ -38,9 +37,9 @@ public:
   void EnforceLimits(double& q, AliengoJointID joint) const;
 
 private:
-  Vector3d hfe_to_haa_z = Vector3d(0.0, 0.0, 0.08); // distance of HFE
-  double length_thigh = 0.35; //length of upper leg
-  double length_shank = 0.33; //length of lower leg
+  Vector3d hfe_to_haa = Vector3d(0.0, -0.083, 0.0); // distance of HFE
+  double length_thigh = 0.25; //length of upper leg
+  double length_shank = 0.25; //length of lower leg // subtract 0.02 ?
 };
 
 } /* namespace xpp */
